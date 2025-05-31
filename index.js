@@ -19,7 +19,7 @@ kc.loadFromDefault()
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api)
 
 const namespace = "default"
-
+// https://github.com/kubernetes-client/javascript/issues/2208#issuecomment-2646002431
 try {
   const res = await k8sApi.readNamespacedSecret({
     name: "dotfile-secret",
@@ -41,6 +41,8 @@ try {
     name: "dotfile-secret",
     body: secret,
   })
+
+  k8sApi.readevnironemt
 } catch (err) {
   console.error(err)
 }
