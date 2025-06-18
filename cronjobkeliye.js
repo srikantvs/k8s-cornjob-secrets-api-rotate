@@ -36,7 +36,6 @@ try {
     body: secret,
   })
 
-  k8sApi.readevnironemt
 } catch (err) {
   console.error(err)
 }
