@@ -1,50 +1,52 @@
-import express from "express"
-import * as k8s from "@kubernetes/client-node"
+console.log("Hello from index.js")
 
-const app = express()
-app.use(express.json())
+// import express from "express"
+// import * as k8s from "@kubernetes/client-node"
 
-// get the key which is set inside container
-app.get("/key", (request, response) => {
-  response.sendStatus(200)
-})
+// const app = express()
+// app.use(express.json())
 
-app.get("/rot", (request, response) => {
-  response.sendStatus(200)
-})
+// // get the key which is set inside container
+// app.get("/key", (request, response) => {
+//   response.sendStatus(200)
+// })
 
-const kc = new k8s.KubeConfig()
-kc.loadFromDefault()
+// app.get("/rot", (request, response) => {
+//   response.sendStatus(200)
+// })
 
-const k8sApi = kc.makeApiClient(k8s.CoreV1Api)
+// const kc = new k8s.KubeConfig()
+// kc.loadFromDefault()
 
-const namespace = "default"
-// https://github.com/kubernetes-client/javascript/issues/2208#issuecomment-2646002431
-try {
-  const res = await k8sApi.readNamespacedSecret({
-    name: "dotfile-secret",
-    namespace,
-  })
-  let secret = res
-  // const res = await k8sApi.list
-  console.log(res)
-  // Destructure and rename the key (since it has a hyphen)
-  let { "secret-file": initialKey } = res.data
-  console.log(initialKey)
+// const k8sApi = kc.makeApiClient(k8s.CoreV1Api)
 
-  // update the initialKey
-  const finalKey = Buffer.from("FINAL_KEY_"+new Date()).toString("base64")
-  const newKey = { "secret-file": finalKey }
-  secret.data = newKey
-  await k8sApi.replaceNamespacedSecret({
-    namespace,
-    name: "dotfile-secret",
-    body: secret,
-  })
+// const namespace = "default"
+// // https://github.com/kubernetes-client/javascript/issues/2208#issuecomment-2646002431
+// try {
+//   const res = await k8sApi.readNamespacedSecret({
+//     name: "dotfile-secret",
+//     namespace,
+//   })
+//   let secret = res
+//   // const res = await k8sApi.list
+//   console.log(res)
+//   // Destructure and rename the key (since it has a hyphen)
+//   let { "secret-file": initialKey } = res.data
+//   console.log(initialKey)
 
-  k8sApi.readevnironemt
-} catch (err) {
-  console.error(err)
-}
+//   // update the initialKey
+//   const finalKey = Buffer.from("FINAL_KEY_"+new Date()).toString("base64")
+//   const newKey = { "secret-file": finalKey }
+//   secret.data = newKey
+//   await k8sApi.replaceNamespacedSecret({
+//     namespace,
+//     name: "dotfile-secret",
+//     body: secret,
+//   })
+
+//   k8sApi.readevnironemt
+// } catch (err) {
+//   console.error(err)
+// }
 
 // console.log(Buffer.from('FINAL_KEY').toString('base64'))
