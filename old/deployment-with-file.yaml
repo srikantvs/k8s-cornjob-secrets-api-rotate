@@ -4,6 +4,10 @@ metadata:
   name: dotfile-secret
 data:
   secret-file: SU5JVElBTF9LRVk=
+
+
+
+
 ---
 apiVersion: v1
 kind: Pod

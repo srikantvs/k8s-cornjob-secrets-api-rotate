@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-key-secret
+type: Opaque
+data:
+  newKey: eyJrZXkiOiAiYWJjZCIsICJpc0FjdGl2ZSI6ICJ5IiwgImV4cGlyZXNBdCI6ICIyMDI2LTA3LTA4VDAwOjAwOjAwWiJ9
+  oldKey: eyJrZXkiOiAiZWZnaCIsICJpc0FjdGl2ZSI6ICJuIiwgImV4cGlyZXNBdCI6ICIyMDI1LTA3LTA4VDAwOjAwOjAwWiJ9
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-dotfiles-pod
+spec:
+  volumes:
+    - name: secret-volume
+      secret:
+        secretName: api-key-secret
+  containers:
+    - name: dotfile-test-container
+      image: busybox
+      command: ["sleep", "3600"]
+      volumeMounts:
+        - name: secret-volume
+          readOnly: true
+          mountPath: "/etc/secret-volume"
+
+
+---
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cronjob-sa
+  namespace: default
+
+
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-editor
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "update"]
+
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: secret-editor-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: cronjob-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: secret-editor
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
