@@ -16,7 +16,7 @@ const namespace = "default"
 // https://github.com/kubernetes-client/javascript/issues/2208#issuecomment-2646002431
 try {
   const res = await k8sApi.readNamespacedSecret({
-    name: "api-key-secret",
+    name: "api-key-secret1",
     namespace,
   })
   let secret = res
@@ -46,7 +46,7 @@ try {
 
   await k8sApi.replaceNamespacedSecret({
     namespace,
-    name: "api-key-secret",
+    name: "api-key-secret1",
     body: secret,
   })
 
