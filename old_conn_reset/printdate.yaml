@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: print-date-cronjob
+spec:
+  schedule: "*/1 * * * *"  # Runs at the top of every hour. Change as needed.
+  successfulJobsHistoryLimit: 2 # keep these many successful pods
+  failedJobsHistoryLimit: 5 #keep these many failure pods
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cronjob-sa
+          containers:
+          - name: node-date
+            image: apna:latest  # Use an official Node.js image
+            command: ["/bin/sh","-c"]
+            args: ["node cronjobkeliye.js"]
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: APPLICATION_NAME
+                value: "Hello from CronJob"
+              - name: POD_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name #Upar dekho metadata me kya hai
+          restartPolicy: OnFailure
+
+          
+            

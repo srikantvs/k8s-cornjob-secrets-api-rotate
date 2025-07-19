@@ -1,0 +1,29 @@
+# File: block-example-egress.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-example-egress
+  namespace: default
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 23.192.228.80/32
+        - ipBlock:
+            cidr: 23.192.228.84/32
+        - ipBlock:
+            cidr: 23.215.0.136/32
+        - ipBlock:
+            cidr: 23.215.0.138/32
+        - ipBlock:
+            cidr: 96.7.128.175/32
+        - ipBlock:
+            cidr: 96.7.128.198/32
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
